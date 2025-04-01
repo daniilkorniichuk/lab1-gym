@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.example.GymTests" tests="9" skipped="0" failures="0" errors="0" timestamp="2025-04-01T19:31:03" hostname="DESKTOP-UI78P3F" time="0.038">
+  <properties/>
+  <testcase name="updateVisitorTest()" classname="org.example.GymTests" time="0.021"/>
+  <testcase name="registerVisitorTest()" classname="org.example.GymTests" time="0.001"/>
+  <testcase name="isNotActiveMembershipTest()" classname="org.example.GymTests" time="0.001"/>
+  <testcase name="markVisitTest()" classname="org.example.GymTests" time="0.001"/>
+  <testcase name="deleteVisitorTest()" classname="org.example.GymTests" time="0.001"/>
+  <testcase name="trainerAssignVisitorTest()" classname="org.example.GymTests" time="0.001"/>
+  <testcase name="enrollToTrainerTest()" classname="org.example.GymTests" time="0.001"/>
+  <testcase name="isActiveMembershipTest()" classname="org.example.GymTests" time="0.001"/>
+  <testcase name="markVisitWithoutActiveMembershipTest()" classname="org.example.GymTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

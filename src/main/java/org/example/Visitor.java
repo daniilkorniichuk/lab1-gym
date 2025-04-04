@@ -14,6 +14,7 @@ public class Visitor {
         this.surname = surname;
         this.phoneNumber = phoneNumber;
     }
+    public Visitor() {};
 
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
@@ -25,7 +26,7 @@ public class Visitor {
     public void setSurname(String surname) { this.surname = surname; }
 
     public String getPhoneNumber() { return phoneNumber; }
-    public void setPhoneNumber(String name) { this.phoneNumber = phoneNumber; }
+    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
 
     @Override
     public boolean equals(Object o) {

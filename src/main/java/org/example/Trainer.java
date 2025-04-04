@@ -3,6 +3,7 @@ package org.example;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+
 public class Trainer {
     private String id;
     private String name;
@@ -17,17 +18,12 @@ public class Trainer {
         assignedVisitors.add(visitor);
     }
 
-    public boolean isAssignedTo(Visitor visitor){
+    public boolean isAssignedTo(Visitor visitor) {
         return assignedVisitors.contains(visitor);
     }
 
-    public String getId() {return id;}
-    public void setId(String id) {this.id = id;}
-
-    public String getName() {return name;}
-    public void setName(String name) {this.name = name;}
-
-    public Set<Visitor> getAssignedVisitors() {return assignedVisitors;}
+    public String getId() { return id; }
+    public String getName() { return name; }
 
     @Override
     public boolean equals(Object o) {
@@ -43,7 +39,6 @@ public class Trainer {
 
     @Override
     public String toString() {
-        return "org.example.Trainer{id='" + id + "', name='" + name + "'}";
+        return "Trainer{id='" + id + "', name='" + name + "'}";
     }
 }
-

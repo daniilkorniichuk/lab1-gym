@@ -2,84 +2,111 @@ package org.example;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import java.time.LocalDate;
-import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-class GymTests {
+public class GymTests {
     private Gym gym;
-    private Visitor visitor1, visitor2;
+    private Visitor visitor;
     private Trainer trainer;
-    private Membership membershipActive, membershipExpired;
+    private Membership activeMembership;
+    private Membership expiredMembership;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         gym = new Gym();
-        visitor1 = new Visitor("1", "Іван", "Петренко", "123456789");
-        visitor2 = new Visitor("2", "Марія", "Іванова", "987654321");
-        trainer = new Trainer("T1", "Олександр");
+        visitor = new Visitor("v1", "Іван", "Іванов", "123456789");
+        trainer = new Trainer("t1", "Олександр");
+        activeMembership = new Membership("v1", LocalDate.of(2025, 1, 1), LocalDate.of(2025, 12, 31));
+        expiredMembership = new Membership("v1", LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 31));
 
-        membershipActive = new Membership("1", LocalDate.now().minusDays(10), LocalDate.now().plusDays(10));
-        membershipExpired = new Membership("2", LocalDate.now().minusDays(30), LocalDate.now().minusDays(5));
-    }
-
-    @Test
-    void registerVisitorTest() {
-        gym.registerVisitor(visitor1);
-        assertEquals(1, gym.getVisitors().size());
-        assertNotNull(gym.getVisitor("1"));
-    }
-
-    @Test
-    void updateVisitorTest() {
-        gym.registerVisitor(visitor1);
-        assertTrue(gym.updateVisitor("1", "Олег", "Петров", "111222333"));
-        assertEquals("Олег", gym.getVisitor("1").getName());
-    }
-
-    @Test
-    void deleteVisitorTest() {
-        gym.registerVisitor(visitor1);
-        assertTrue(gym.deleteVisitor("1"));
-        assertNull(gym.getVisitor("1"));
-    }
-
-    @Test
-    void enrollToTrainerTest() {
-        gym.registerVisitor(visitor1);
+        gym.registerVisitor(visitor);
         gym.addTrainer(trainer);
-        assertTrue(gym.enrollToTrainer("1", "T1"));
-        assertTrue(trainer.isAssignedTo(visitor1));
     }
 
+    // Тест 1: реєстрація відвідувача
     @Test
-    void markVisitTest() {
-        gym.registerVisitor(visitor1);
-        gym.assignMembership(membershipActive);
-        assertTrue(gym.markVisit("1"));
-        assertEquals(1, gym.getVisitHistory("1").size());
+    public void testRegisterVisitor() {
+        gym.registerVisitor(new Visitor("v2", "Петро", "Петров", "987654321"));
+        assertNotNull(gym.getVisitor("v2"));
     }
 
+    // Тест 2: спроба реєстрації того самого відвідувача двічі
     @Test
-    void markVisitWithoutActiveMembershipTest() {
-        gym.registerVisitor(visitor2);
-        gym.assignMembership(membershipExpired);
-        assertFalse(gym.markVisit("2"));
+    public void testRegisterVisitorTwice() {
+        gym.registerVisitor(visitor);
+        gym.registerVisitor(visitor);  // не має бути додано вдруге
+        assertEquals(1, gym.getVisitors().size());
     }
 
+    // Тест 3: оновлення даних відвідувача
     @Test
-    void isActiveMembershipTest() {
-        assertTrue(membershipActive.isActive());
+    public void testUpdateVisitor() {
+        assertTrue(gym.updateVisitor("v1", "Іван", "Іванов", "111111111"));
+        assertEquals("Іван", gym.getVisitor("v1").getName());
     }
 
+    // Тест 4: оновлення даних неіснуючого відвідувача
     @Test
-    void isNotActiveMembershipTest() {
-        assertFalse(membershipExpired.isActive());
+    public void testUpdateVisitorNotFound() {
+        assertFalse(gym.updateVisitor("v2", "Петро", "Петров", "987654321"));
     }
 
+    // Тест 5: видалення відвідувача
     @Test
-    void trainerAssignVisitorTest() {
-        trainer.assignVisitor(visitor1);
-        assertTrue(trainer.isAssignedTo(visitor1));
+    public void testDeleteVisitor() {
+        gym.deleteVisitor("v1");
+        assertNull(gym.getVisitor("v1"));
+    }
+
+    // Тест 6: спроба видалення неіснуючого відвідувача
+    @Test
+    public void testDeleteVisitorNotFound() {
+        assertFalse(gym.deleteVisitor("v2"));
+    }
+
+    // Тест 7: маркування відвідування для активного абонемента
+    @Test
+    public void testMarkVisitActiveMembership() {
+        gym.assignMembership(activeMembership);
+        assertTrue(gym.markVisit("v1"));
+        assertEquals(1, gym.getVisitHistory("v1").size());
+    }
+
+    // Тест 8: маркування відвідування для неактивного абонемента
+    @Test
+    public void testMarkVisitExpiredMembership() {
+        gym.assignMembership(expiredMembership);
+        assertFalse(gym.markVisit("v1"));
+        assertEquals(0, gym.getVisitHistory("v1").size());
+    }
+
+    // Тест 9: маркування відвідування для неіснуючого відвідувача
+    @Test
+    public void testMarkVisitNonExistentVisitor() {
+        assertFalse(gym.markVisit("v2"));
+    }
+
+    // Тест 10: реєстрація тренера та призначення відвідувача
+    @Test
+    public void testAssignTrainerToVisitor() {
+        gym.assignMembership(activeMembership);
+        assertTrue(gym.enrollToTrainer("v1", "t1"));
+        assertTrue(trainer.isAssignedTo(visitor));
+    }
+
+    // Тест 11: спроба призначити тренера неіснуючому відвідувачу
+    @Test
+    public void testAssignTrainerToNonExistentVisitor() {
+        assertFalse(gym.enrollToTrainer("v2", "t1"));
+    }
+
+    // Тест 12: спроба призначити неіснуючого тренера
+    @Test
+    public void testAssignNonExistentTrainerToVisitor() {
+        gym.assignMembership(activeMembership);
+        assertFalse(gym.enrollToTrainer("v1", "t2"));
     }
 }
